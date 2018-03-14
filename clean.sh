@@ -21,7 +21,16 @@ done
 '''
 for((i=1;i<=10;i++));  
 do
-	kill -9 `netstat -nlp | grep :5000 | grep -v grep | awk '{print $7}' | awk -F"/" '{print $1}'`;  
+	kill -9 `netstat -nlp | grep :5000 | grep -v grep | awk '{print $7}' | awk -F"/" '{print $1}'`;               #只能显示5000端口对应的一个pid
 done  
 '''
+'''
 	
+kill -9 `ps aux | grep gunicorn | grep app  | awk '{ print $2 }'`                        #kill  显示5000端口对应的所有pid
+
+gunicorn -w8 --threads 12 -b0.0.0.0:5000 app:app
+
+supervisorctl -c supervisor.conf status
+supervisorctl -c supervisor.conf reload
+supervisorctl -c supervisor.conf start all
+'''
